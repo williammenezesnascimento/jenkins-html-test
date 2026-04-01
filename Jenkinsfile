@@ -9,7 +9,7 @@ pipeline {
 
         stage('Clone Repo') {
             steps {
-                git 'git@github.com:SEU_USUARIO/jenkins-html-test.git'
+                git 'git@github.com:williammenezesnascimento/jenkins-html-test.git'
             }
         }
 
