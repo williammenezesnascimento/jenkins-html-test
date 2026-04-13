@@ -3,9 +3,21 @@ pipeline {
 
     environment {
         IMAGE_NAME = "jenkins-site"
+        CONTAINER_NAME = "site"
+        DOCKER_BUILDKIT = "1"
+    }
+
+    triggers {
+        githubPush()
     }
 
     stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main',
+                    url: 'git@github.com:willmenezesnascimento/git@github.com:williammenezesnascimento/jenkins-html-test.git'
+            }
+        }
 
         stage('Build Docker Image') {
             steps {
@@ -16,8 +28,8 @@ pipeline {
         stage('Stop Old Container') {
             steps {
                 sh '''
-                docker stop site || true
-                docker rm site || true
+                docker stop $CONTAINER_NAME || true
+                docker rm $CONTAINER_NAME || true
                 '''
             }
         }
@@ -25,7 +37,7 @@ pipeline {
         stage('Run Container') {
             steps {
                 sh '''
-                docker run -d -p 80:80 --name site $IMAGE_NAME
+                docker run -d -p 80:80 --name $CONTAINER_NAME $IMAGE_NAME
                 '''
             }
         }
