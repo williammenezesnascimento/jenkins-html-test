@@ -15,7 +15,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 git branch: 'main',
-                    url: 'https://github.com/williammenezesnascimento/jenkins-html-test.git'
+                    url: 'git@github.com:williammenezesnascimento/jenkins-html-test.git'
             }
         }
 
