@@ -4,6 +4,7 @@ pipeline {
     environment {
         IMAGE_NAME = "jenkins-site"
         CONTAINER_NAME = "site"
+        DOCKER_BUILDKIT = "1"
     }
 
     triggers {
