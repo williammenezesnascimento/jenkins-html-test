@@ -4,7 +4,6 @@ pipeline {
     environment {
         IMAGE_NAME = "jenkins-site"
         CONTAINER_NAME = "site"
-        DOCKER_BUILDKIT = "1"
     }
 
     triggers {
@@ -15,7 +14,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 git branch: 'main',
-                    url: 'git@github.com:williammenezesnascimento/jenkins-html-test.git'
+                    url: 'https://github.com/williammenezesnascimento/jenkins-html-test.git'
             }
         }
 
