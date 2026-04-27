@@ -12,13 +12,6 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                git branch: 'main',
-                    url: 'git@github.com:williammenezesnascimento/jenkins-html-test.git',
-                    credentialsId: 'github-ssh'
-            }
-        }
 
         stage('Build Docker Image') {
             steps {
