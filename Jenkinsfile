@@ -4,7 +4,6 @@ pipeline {
     environment {
         IMAGE_NAME = "jenkins-site"
         CONTAINER_NAME = "site"
-        DOCKER_BUILDKIT = "0"
     }
 
     triggers {
@@ -22,22 +21,15 @@ pipeline {
             }
         }
 
-        stage('Remove Old Container') {
+        stage('Deploy') {
             steps {
                 sh '''
-                echo "🧹 Removing old container if exists..."
+                echo "🧹 Removing old container..."
                 docker rm -f $CONTAINER_NAME || true
-                '''
-            }
-        }
 
-        stage('Run Container') {
-            steps {
-                sh '''
                 echo "🚀 Starting new container..."
-
                 docker run -d \
-                  -p 80:80 \
+                  -p 8081:80 \
                   --name $CONTAINER_NAME \
                   --restart unless-stopped \
                   $IMAGE_NAME
@@ -49,9 +41,9 @@ pipeline {
             steps {
                 sh '''
                 echo "🔍 Checking application..."
-
                 sleep 5
-                curl -I http://localhost:80 || exit 1
+
+                curl -I http://localhost:8081 || exit 1
                 '''
             }
         }
@@ -63,6 +55,7 @@ pipeline {
         }
         failure {
             echo "❌ Falha no pipeline!"
+            sh 'docker logs site || true'
         }
     }
 }
