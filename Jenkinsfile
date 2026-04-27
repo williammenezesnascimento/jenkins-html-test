@@ -40,10 +40,11 @@ pipeline {
         stage('Health Check') {
             steps {
                 sh '''
-                echo "🔍 Checking application..."
+                echo "🔍 Checking container..."
+
                 sleep 5
 
-                curl -I http://localhost:8081 || exit 1
+                docker exec $CONTAINER_NAME wget -qO- http://localhost || exit 1
                 '''
             }
         }
