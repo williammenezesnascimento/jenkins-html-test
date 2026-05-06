@@ -23,18 +23,16 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('sonarqube') {
-                    sh '''
+                    sh """
                     docker run --rm \
-                    -v $WORKSPACE:/usr/src \
-                    -w /usr/src \
-                    sonarsource/sonar-scanner-cli:latest \
-                    bash -c "ls -la /usr/src"
-                    sonar-scanner \
-                    -Dsonar.projectKey=jenkins-html-test \
-                    -Dsonar.sources=/usr/src \
-                    -Dsonar.host.url=$SONAR_HOST_URL \
-                    -Dsonar.token=$SONAR_AUTH_TOKEN
-                    '''
+                      -v $WORKSPACE:/usr/src \
+                      -w /usr/src \
+                      sonarsource/sonar-scanner-cli:latest \
+                      -Dsonar.projectKey=jenkins-html-test \
+                      -Dsonar.sources=. \
+                      -Dsonar.host.url=$SONAR_HOST_URL \
+                      -Dsonar.token=$SONAR_AUTH_TOKEN
+                    """
                 }
             }
         }
@@ -47,7 +45,7 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                sh '''
+                sh """
                 docker stop site || true
                 docker rm site || true
 
@@ -56,7 +54,7 @@ pipeline {
                 -p 8081:80 \
                 --name site \
                 jenkins-site
-                '''
+                """
             }
         }
     }
