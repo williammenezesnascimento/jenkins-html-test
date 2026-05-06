@@ -33,6 +33,9 @@ pipeline {
                     sonar-scanner \
                     -Dsonar.projectKey=to-do-list \
                     -Dsonar.sources=. \
+                    -Dsonar.javascript.file.suffixes=.js \
+                    -Dsonar.css.file.suffixes=.css \
+                    -Dsonar.html.file.suffixes=.html \
                     -Dsonar.exclusions=.git/**,node_modules/** \
                     -Dsonar.sourceEncoding=UTF-8 \
                     -Dsonar.host.url=http://54.232.129.247:9000 \
