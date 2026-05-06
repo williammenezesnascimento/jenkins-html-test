@@ -1,209 +1,268 @@
 <?php
+// Você pode usar PHP aqui depois (logs, variáveis, etc)
+$title = "CI/CD DevOps - Jenkins + Docker + AWS";
 ?>
+
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>CI/CD Jenkins + SonarQube</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title><?php echo $title; ?></title>
 
 <style>
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #0f172a, #1e293b);
-    color: #e2e8f0;
-    padding: 40px;
+body { margin:0; font-family: Inter, Arial; background:#0b1220; color:#e5e7eb; }
+
+.sidebar {
+  width:270px; height:100vh; position:fixed;
+  background:#111827; padding:20px; overflow:auto;
 }
 
-.container {
-    max-width: 1000px;
-    margin: auto;
+.sidebar h2 { color:#38bdf8; }
+
+.sidebar a {
+  display:block;
+  color:#9ca3af;
+  text-decoration:none;
+  margin:8px 0;
 }
 
-h1 {
-    color: #38bdf8;
-    text-align: center;
-    margin-bottom: 30px;
+.sidebar a:hover { color:#fff; }
+
+.content {
+  margin-left:290px;
+  padding:40px;
+  max-width:1000px;
 }
 
-h2 {
-    color: #22c55e;
-    margin-top: 40px;
-}
+h1,h2,h3 { color:#38bdf8; }
 
-.step {
-    background: rgba(255,255,255,0.05);
-    padding: 20px;
-    margin-bottom: 20px;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+.card {
+  background:#111827;
+  padding:20px;
+  border-radius:10px;
+  margin-bottom:25px;
+  box-shadow:0 0 10px rgba(0,0,0,0.3);
 }
 
 code {
-    display: block;
-    background: #0b1220;
-    color: #38bdf8;
-    padding: 12px;
-    border-radius: 8px;
-    margin-top: 10px;
-    overflow-x: auto;
+  display:block;
+  background:#1f2937;
+  padding:12px;
+  border-radius:8px;
+  margin:10px 0;
+  white-space:pre-wrap;
 }
 
-.badge {
-    display: inline-block;
-    background: #22c55e;
-    color: #000;
-    padding: 5px 10px;
-    border-radius: 6px;
-    font-size: 12px;
-    margin-bottom: 10px;
-}
+.success { border-left:5px solid #22c55e; }
+.error { border-left:5px solid #ef4444; }
+.warning { border-left:5px solid #f59e0b; }
+
 </style>
-
 </head>
 
 <body>
 
-<div class="container">
-
-<h1>🚀 CI/CD Completo com Jenkins + Docker + SonarQube</h1>
-
-<div class="step">
-<span class="badge">1. Objetivo</span>
-<p>Este projeto foi criado para aprender CI/CD na prática usando Jenkins, Docker e SonarQube.</p>
-<p>O fluxo completo automatiza:</p>
-<ul>
-    <li>✔ Checkout do código no GitHub</li>
-    <li>✔ Build da aplicação</li>
-    <li>✔ Análise de qualidade com SonarQube</li>
-    <li>✔ Build da imagem Docker</li>
-    <li>✔ Deploy automático</li>
-</ul>
+<div class="sidebar">
+<h2>📘 CI/CD Docs</h2>
+<a href="#terraform">Terraform</a>
+<a href="#ssh">SSH</a>
+<a href="#docker">Docker</a>
+<a href="#scp">SCP</a>
+<a href="#build">Build</a>
+<a href="#jenkins">Jenkins</a>
+<a href="#buildkit">BuildKit</a>
+<a href="#github">GitHub SSH</a>
+<a href="#credentials">Credentials</a>
+<a href="#pipeline">Pipeline</a>
+<a href="#webhook">Webhook</a>
+<a href="#dockerhub">DockerHub CI/CD</a>
+<a href="#errors">Erros</a>
+<a href="#aws">AWS Debug</a>
+<a href="#architecture">Arquitetura</a>
 </div>
 
-<div class="step">
-<span class="badge">2. Estrutura do Jenkins Pipeline</span>
+<div class="content">
 
-<p>Pipeline base utilizado:</p>
+<h1>🚀 CI/CD com Jenkins + Docker + AWS</h1>
+<p>Guia completo baseado em implementação real com erros, correções e boas práticas DevOps.</p>
 
+<div class="card" id="terraform">
+<h2>1. Terraform</h2>
 <code>
-pipeline {<br>
-&nbsp;&nbsp;agent any<br><br>
+terraform init
+terraform plan
+terraform apply
+</code>
+</div>
 
-&nbsp;&nbsp;environment {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;IMAGE_NAME = "jenkins-site"<br>
-&nbsp;&nbsp;&nbsp;&nbsp;CONTAINER_NAME = "site"<br>
-&nbsp;&nbsp;}<br><br>
+<div class="card" id="ssh">
+<h2>2. SSH (Windows)</h2>
+<code>
+icacls Jenkins-key.pem /inheritance:r
+icacls Jenkins-key.pem /grant:r "$($env:USERNAME):(R)"
 
-&nbsp;&nbsp;stages {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;stage('Checkout') {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;steps { checkout scm }<br>
-&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>
+ssh -i Jenkins-key.pem ubuntu@SEU_IP
+</code>
+</div>
 
-&nbsp;&nbsp;&nbsp;&nbsp;stage('Build') {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;steps { sh 'echo build ok' }<br>
-&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>
+<div class="card" id="docker">
+<h2>3. Docker Setup</h2>
+<code>
+sudo apt update
+sudo apt install docker.io -y
+sudo usermod -aG docker ubuntu
+</code>
+</div>
 
-&nbsp;&nbsp;&nbsp;&nbsp;stage('SonarQube') {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;steps { ... }<br>
-&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>
+<div class="card" id="scp">
+<h2>4. Enviar arquivos (SCP)</h2>
+<code>
+scp -i Jenkins-key.pem Dockerfile ubuntu@IP:/home/ubuntu
+</code>
+</div>
 
-&nbsp;&nbsp;&nbsp;&nbsp;stage('Docker Build') {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;steps { sh 'docker build -t jenkins-site .' }<br>
-&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>
+<div class="card" id="build">
+<h2>5. Build da Imagem</h2>
+<code>
+docker build -t jenkins .
+docker images
+</code>
+</div>
 
-&nbsp;&nbsp;&nbsp;&nbsp;stage('Deploy') {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;steps { ... }<br>
-&nbsp;&nbsp;&nbsp;&nbsp;}<br>
-&nbsp;&nbsp;}<br>
+<div class="card" id="jenkins">
+<h2>6. Subir Jenkins</h2>
+<code>
+docker run -d \
+--name jenkins \
+-p 8080:8080 \
+-p 50000:50000 \
+-v jenkins_home:/var/jenkins_home \
+-v /var/run/docker.sock:/var/run/docker.sock \
+-v /usr/bin/docker:/usr/bin/docker \
+--group-add $(getent group docker | cut -d: -f3) \
+jenkins/jenkins:lts
+</code>
+</div>
+
+<div class="card" id="buildkit">
+<h2>7. BuildKit</h2>
+<code>
+sudo apt install docker-buildx-plugin -y
+docker buildx create --use
+docker buildx inspect --bootstrap
+</code>
+</div>
+
+<div class="card" id="github">
+<h2>8. GitHub SSH</h2>
+<code>
+ssh-keygen
+cat /var/jenkins_home/.ssh/id_ed25519.pub
+</code>
+</div>
+
+<div class="card warning">
+<h2>⚠️ Permissões SSH</h2>
+<code>
+chmod 700 ~/.ssh
+chmod 600 id_ed25519
+chmod 644 id_ed25519.pub
+ssh-keyscan github.com >> ~/.ssh/known_hosts
+</code>
+</div>
+
+<div class="card" id="credentials">
+<h2>9. Credentials Jenkins</h2>
+<p><b>ID:</b> github-ssh</p>
+<p><b>Username:</b> git</p>
+<p><b>Private Key:</b> id_ed25519</p>
+</div>
+
+<div class="card" id="pipeline">
+<h2>10. Pipeline Jenkins</h2>
+<code>
+pipeline {
+ agent any
+
+ stages {
+  stage('Checkout') {
+   steps {
+    git branch: 'main',
+        credentialsId: 'github-ssh',
+        url: 'git@github.com/SEU_REPO.git'
+   }
+  }
+
+  stage('Build') {
+   steps {
+    sh 'docker build -t app .'
+   }
+  }
+
+  stage('Deploy') {
+   steps {
+    sh '''
+    docker stop app || true
+    docker rm app || true
+    docker run -d -p 80:80 app
+    '''
+   }
+  }
+ }
 }
 </code>
-
 </div>
 
-<div class="step">
-<span class="badge">3. SonarQube (Análise de Código)</span>
-
-<p>Execução via Docker:</p>
-
+<div class="card" id="webhook">
+<h2>11. Webhook</h2>
 <code>
-docker run --rm \<br>
-&nbsp;&nbsp;-v $WORKSPACE:/usr/src \<br>
-&nbsp;&nbsp;-w /usr/src \<br>
-&nbsp;&nbsp;sonarsource/sonar-scanner-cli:latest \<br>
-&nbsp;&nbsp;sonar-scanner \<br>
-&nbsp;&nbsp;-Dsonar.projectKey=jenkins-html-test \<br>
-&nbsp;&nbsp;-Dsonar.sources=. \<br>
-&nbsp;&nbsp;-Dsonar.host.url=$SONAR_HOST_URL \<br>
-&nbsp;&nbsp;-Dsonar.token=$SONAR_AUTH_TOKEN
+http://SEU_IP:8080/github-webhook/
 </code>
-
-<p>📌 O Sonar analisa o código e identifica bugs, code smells e qualidade geral.</p>
-
 </div>
 
-<div class="step">
-<span class="badge">4. Docker Build</span>
-
+<div class="card" id="dockerhub">
+<h2>12. CI/CD com DockerHub</h2>
 <code>
-docker build -t jenkins-site .
+docker build -t usuario/app .
+docker push usuario/app
 </code>
-
-<p>Cria a imagem da aplicação PHP com Apache.</p>
-
 </div>
 
-<div class="step">
-<span class="badge">5. Deploy Automatizado</span>
-
-<code>
-docker stop site || true<br>
-docker rm site || true<br><br>
-
-docker run -d \<br>
-&nbsp;&nbsp;--restart unless-stopped \<br>
-&nbsp;&nbsp;-p 8081:80 \<br>
-&nbsp;&nbsp;--name site \<br>
-&nbsp;&nbsp;jenkins-site
-</code>
-
-<p>Remove container antigo e sobe nova versão automaticamente.</p>
-
-</div>
-
-<div class="step">
-<span class="badge">6. Resultado Final</span>
-
-<p>
-✔ Pipeline executado automaticamente<br>
-✔ Código analisado pelo SonarQube<br>
-✔ Aplicação publicada via Docker<br>
-✔ Deploy contínuo funcionando
-</p>
-
-<p style="color:#22c55e; font-weight:bold;">
-🚀 CI/CD funcionando com sucesso!
-</p>
-
-</div>
-
-<div class="step">
-<span class="badge">7. Aprendizado</span>
-
-<p>
-Este projeto demonstra conceitos reais de DevOps:
-</p>
-
+<div class="card error" id="errors">
+<h2>⚠️ Erros Reais Resolvidos</h2>
 <ul>
-    <li>Jenkins (orquestração do pipeline)</li>
-    <li>Docker (containerização)</li>
-    <li>SonarQube (qualidade de código)</li>
-    <li>GitHub (versionamento)</li>
+<li>Branch master vs main</li>
+<li>Permission denied SSH</li>
+<li>Docker socket</li>
+<li>Webhook 403 / 404</li>
 </ul>
+</div>
 
+<div class="card" id="aws">
+<h2>13. Debug AWS</h2>
+<code>
+curl localhost
+curl ifconfig.me
+docker ps
+</code>
+</div>
+
+<div class="card success" id="architecture">
+<h2>📊 Arquitetura Final</h2>
+<code>
+GitHub
+ ↓
+Webhook
+ ↓
+Jenkins
+ ↓
+Docker Build
+ ↓
+Deploy EC2
+</code>
 </div>
 
 </div>
-
 </body>
 </html>
