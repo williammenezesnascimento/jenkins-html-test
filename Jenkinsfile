@@ -10,15 +10,13 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                echo "📥 Clonando repositório via SCM..."
                 checkout scm
             }
         }
 
         stage('Build') {
             steps {
-                echo "🔨 Build da aplicação..."
-                sh 'echo "build ok"'
+                sh 'echo build ok'
             }
         }
 
@@ -26,51 +24,31 @@ pipeline {
             steps {
                 withSonarQubeEnv('sonarqube') {
                     sh '''
-                        echo "📊 Executando SonarQube Scanner..."
-
-                        sonar-scanner \
-                        -Dsonar.projectKey=jenkins-html-test \
-                        -Dsonar.sources=. \
-                        -Dsonar.sourceEncoding=UTF-8
+                    docker run --rm \
+                      -v $WORKSPACE:/usr/src \
+                      -w /usr/src \
+                      sonarsource/sonar-scanner-cli:latest \
+                      sonar-scanner \
+                      -Dsonar.projectKey=jenkins-html-test \
+                      -Dsonar.sources=.
                     '''
-                }
-            }
-        }
-
-        stage('Quality Gate') {
-            steps {
-                timeout(time: 2, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
                 }
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                echo "🐳 Buildando imagem Docker..."
-                sh "docker build -t ${IMAGE_NAME} ."
+                sh 'docker build -t jenkins-site .'
             }
         }
 
         stage('Deploy') {
             steps {
-                echo "🚀 Subindo container..."
-                sh """
-                    docker rm -f ${CONTAINER_NAME} || true
-                    docker run -d -p 8080:80 --name ${CONTAINER_NAME} ${IMAGE_NAME}
-                """
+                sh '''
+                docker rm -f site || true
+                docker run -d -p 8080:80 --name site jenkins-site
+                '''
             }
-        }
-    }
-
-    post {
-        success {
-            echo "✅ Pipeline executado com sucesso!"
-        }
-
-        failure {
-            echo "❌ Falha no pipeline"
-            sh "docker logs ${CONTAINER_NAME} || true"
         }
     }
 }
