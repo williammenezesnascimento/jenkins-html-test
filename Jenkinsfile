@@ -21,7 +21,7 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('sonarqube') {
+               withSonarQubeEnv('sonarqube') {
                     sh '''
                     docker run --rm \
                     -v $WORKSPACE:/usr/src \
@@ -30,8 +30,8 @@ pipeline {
                     sonar-scanner \
                     -Dsonar.projectKey=to-do-list \
                     -Dsonar.sources=. \
-                    -Dsonar.host.url=http://54.232.129.247:9000 \
-                    -Dsonar.login=$SONAR_TOKEN
+                    -Dsonar.exclusions=.git/**,node_modules/** \
+                    -Dsonar.sourceEncoding=UTF-8
                     '''
                 }
             }
