@@ -61,7 +61,7 @@ pipeline {
 
                 echo "🚀 Starting new container..."
                 docker run -d \
-                  -p 8081:80 \
+                  -p 8080:80 \
                   --name $CONTAINER_NAME \
                   --restart unless-stopped \
                   $IMAGE_NAME
