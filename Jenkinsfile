@@ -28,6 +28,7 @@ pipeline {
                     -v $WORKSPACE:/usr/src \
                     -w /usr/src \
                     sonarsource/sonar-scanner-cli:latest \
+                    bash -c "ls -la /usr/src"
                     sonar-scanner \
                     -Dsonar.projectKey=jenkins-html-test \
                     -Dsonar.sources=/usr/src \
