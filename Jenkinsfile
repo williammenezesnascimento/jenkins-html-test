@@ -24,18 +24,19 @@ pipeline {
                 withSonarQubeEnv('sonarqube') {
 
                     sh '''
-                    ls -la
-                    find . -maxdepth 2
+                    echo "📂 Workspace:"
                     pwd
+                    ls -la
+                    find . -type f
 
                     docker run --rm \
-                    -v $WORKSPACE:/usr/src \
+                    -v $WORKSPACE:/usr/src:rw \
                     -w /usr/src \
                     sonarsource/sonar-scanner-cli:5 \
                     sonar-scanner \
                     -Dsonar.projectKey=to-do-list \
                     -Dsonar.projectBaseDir=/usr/src \
-                    -Dsonar.sources=. \
+                    -Dsonar.sources=/usr/src \
                     -Dsonar.inclusions=**/*.js,**/*.html,**/*.css \
                     -Dsonar.exclusions=.git/**,node_modules/** \
                     -Dsonar.sourceEncoding=UTF-8 \
@@ -76,9 +77,7 @@ pipeline {
             steps {
                 sh '''
                 echo "🔍 Checking container..."
-
                 sleep 5
-
                 docker exec $CONTAINER_NAME wget -qO- http://localhost || exit 1
                 '''
             }
