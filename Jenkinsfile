@@ -26,14 +26,14 @@ pipeline {
                     docker run --rm \
                     -v $WORKSPACE:/usr/src \
                     -w /usr/src \
-                    sonarsource/sonar-scanner-cli \
+                    sonarsource/sonar-scanner-cli:5 \
                     sonar-scanner \
                     -Dsonar.projectKey=to-do-list \
                     -Dsonar.sources=. \
                     -Dsonar.exclusions=.git/**,node_modules/** \
                     -Dsonar.sourceEncoding=UTF-8 \
                     -Dsonar.host.url=http://54.232.129.247:9000 \
-                    -Dsonar.token=$SONAR_TOKEN \
+                    -Dsonar.login=$SONAR_TOKEN \
                     -Dsonar.scanner.forceFullAnalysis=true
                     '''
                 }
