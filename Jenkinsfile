@@ -25,7 +25,7 @@ pipeline {
                 sh '''
                 echo "📁 FILES SENT TO SONAR:"
                 find . -type f
-
+                ls -R .
                 echo "🔎 Running SonarQube analysis..."
 
                 docker run --rm \
