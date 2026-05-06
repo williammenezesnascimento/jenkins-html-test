@@ -22,6 +22,9 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                withSonarQubeEnv('sonarqube') {
+                    sh 'ls -la'
+                    sh 'find . -type f'
+
                     sh '''
                     docker run --rm \
                     -v $WORKSPACE:/usr/src \
