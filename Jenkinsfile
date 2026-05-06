@@ -48,7 +48,7 @@ pipeline {
                     -Dsonar.inclusions=**/*.php,**/*.js,**/*.css \
                     -Dsonar.exclusions=.git/**,node_modules/** \
                     -Dsonar.sourceEncoding=UTF-8 \
-                    -Dsonar.host.url=http://54.232.129.247:9000 \
+                    -Dsonar.host.url=$SONAR_URL \
                     -Dsonar.token=$SONAR_TOKEN \
                     -Dsonar.scm.disabled=true \
                     -Dsonar.sources=. \
@@ -76,7 +76,7 @@ pipeline {
 
                 echo "🚀 Starting new container..."
                 docker run -d \
-                  -p 8081:80 \
+                  -p 8080:80 \
                   --name $CONTAINER_NAME \
                   --restart unless-stopped \
                   $IMAGE_NAME
