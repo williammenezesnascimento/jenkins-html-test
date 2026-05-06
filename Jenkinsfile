@@ -25,13 +25,16 @@ pipeline {
                     sh '''
                     echo "🔎 Running SonarQube analysis..."
 
-                        docker run --rm \
+                    ls -R .
+
+                    docker run --rm \
                         -v $(pwd):/usr/src \
                         -w /usr/src \
                         sonarsource/sonar-scanner-cli \
                         -Dsonar.projectKey=jenkins-site \
+                        -Dsonar.projectName=jenkins-site \
                         -Dsonar.sources=. \
-                        -Dsonar.inclusions=**/* \
+                        -Dsonar.inclusions=**/*.html,**/*.js,**/*.css \
                         -Dsonar.host.url=$SONAR_HOST_URL \
                         -Dsonar.token=$SONAR_TOKEN
                     '''
