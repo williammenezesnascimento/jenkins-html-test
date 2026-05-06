@@ -4,6 +4,7 @@ pipeline {
     environment {
         IMAGE_NAME = "jenkins-site"
         CONTAINER_NAME = "site"
+        SONAR_TOKEN = credentials('sonar-token')
     }
 
     triggers {
@@ -11,6 +12,40 @@ pipeline {
     }
 
     stages {
+
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('sonarqube') {
+                    sh '''
+                    echo "🔎 Running SonarQube analysis..."
+
+                    docker run --rm \
+                    -e SONAR_HOST_URL=$SONAR_HOST_URL \
+                    -e SONAR_TOKEN=$SONAR_TOKEN \
+                    -v $(pwd):/usr/src \
+                    sonarsource/sonar-scanner-cli \
+                    -Dsonar.projectKey=jenkins-site \
+                    -Dsonar.sources=/usr/src \
+                    -Dsonar.login=$SONAR_TOKEN
+                    '''
+                }
+            }
+        }
+
+        stage('Quality Gate') {
+            steps {
+                timeout(time: 5, unit: 'MINUTES') {
+                    echo "⏳ Waiting for Sonar Quality Gate..."
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
 
         stage('Build Docker Image') {
             steps {
