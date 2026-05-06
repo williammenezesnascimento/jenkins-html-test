@@ -18,7 +18,11 @@ pipeline {
                 checkout scm
             }
         }
-
+        stage('Clean Workspace') {
+            steps {
+                deleteDir()
+            }
+        }
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('sonarqube') {
