@@ -47,8 +47,14 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
-                docker rm -f site || true
-                docker run -d -p 8080:80 --name site jenkins-site
+                docker stop site || true
+                docker rm site || true
+
+                docker run -d \
+                --restart unless-stopped \
+                -p 8081:80 \
+                --name site \
+                jenkins-site
                 '''
             }
         }
