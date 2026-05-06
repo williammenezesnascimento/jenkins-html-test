@@ -11,6 +11,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 git credentialsId: 'github-ssh-key',
+                git branch: 'main',
                     url: 'git@github.com:williammenezesnascimento/jenkins-html-test.git'
             }
         }
