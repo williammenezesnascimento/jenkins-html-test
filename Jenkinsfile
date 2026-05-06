@@ -20,7 +20,16 @@ pipeline {
             }
         }
 
-        stage('SonarQube Analysis') {
+        stage('Debug') {
+        steps {
+            sh '''
+            echo "DEBUG WORKSPACE"
+            pwd
+            ls -la
+            '''
+        }
+    
+        stage('SonarQube') {
             steps {
                 withSonarQubeEnv('sonarqube') {
                     sh '''
