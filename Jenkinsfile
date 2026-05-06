@@ -13,11 +13,6 @@ pipeline {
 
     stages {
 
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
         stage('Clean Workspace') {
             steps {
                 deleteDir()
@@ -29,10 +24,10 @@ pipeline {
                 checkout scm
             }
         }
+
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('sonarqube') {
-
                     sh '''
                     echo "📂 Workspace:"
                     pwd
