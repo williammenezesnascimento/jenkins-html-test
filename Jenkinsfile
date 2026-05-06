@@ -19,35 +19,23 @@ pipeline {
             }
         }
 
-    stage('SonarQube Analysis') {
-        steps {
-            withSonarQubeEnv('sonarqube') {
-                sh 'pwd'
-                sh 'ls -la'
-                sh 'sonar-scanner'
-                sh '''
-                echo "📁 Arquivos do projeto:"
-                find . -type f
-
-                echo "🔎 Sonar analysis..."
-
-                docker run --rm \
-                    -v $(pwd):/usr/src \
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('sonarqube') {
+                    sh '''
+                    docker run --rm \
+                    -v $WORKSPACE:/usr/src \
                     -w /usr/src \
                     sonarsource/sonar-scanner-cli \
+                    sonar-scanner \
                     -Dsonar.projectKey=to-do-list \
                     -Dsonar.sources=. \
-                    -Dsonar.exclusions=.git/**,node_modules/** \
-                    -Dsonar.javascript.file.suffixes=.js \
-                    -Dsonar.html.file.suffixes=.html \
-                    -Dsonar.css.file.suffixes=.css \
-                    -Dsonar.sourceEncoding=UTF-8 \
-                    -Dsonar.host.url=http://54.232.129.247:9000 \
-                    -Dsonar.token=$SONAR_TOKEN
-                '''
+                    -Dsonar.host.url=http://15.228.176.190:9000 \
+                    -Dsonar.login=$SONAR_TOKEN
+                    '''
+                }
             }
         }
-    }
 
         stage('Build Docker Image') {
             steps {
