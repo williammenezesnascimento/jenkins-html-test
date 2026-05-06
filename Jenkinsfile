@@ -13,15 +13,10 @@ pipeline {
 
     stages {
 
-        stage('Clean Workspace') {
-            steps {
-                deleteDir()
-            }
-        }
-
         stage('Checkout') {
             steps {
                 checkout scm
+                sh 'ls -la'
             }
         }
 
@@ -40,7 +35,7 @@ pipeline {
                     sonarsource/sonar-scanner-cli:5 \
                     sonar-scanner \
                     -Dsonar.projectKey=to-do-list \
-                    -Dsonar.projectBaseDir=/usr/src \
+                    -Dsonar.projectBaseDir=. \
                     -Dsonar.inclusions=**/*.php,**/*.js,**/*.css \
                     -Dsonar.exclusions=.git/**,node_modules/** \
                     -Dsonar.sourceEncoding=UTF-8 \
