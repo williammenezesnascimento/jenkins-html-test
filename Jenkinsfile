@@ -31,8 +31,8 @@ pipeline {
                       sonar-scanner \
                       -Dsonar.projectKey=jenkins-html-test \
                       -Dsonar.sources=. \
-                      -Dsonar.host.url=$SONAR_HOST_URL \
-                      -Dsonar.login=$SONAR_TOKEN
+                      -Dsonar.host.url=http://56.124.11.104:9000 \
+                      -Dsonar.login=squ_fd09c94e1d6473f7df5c99c912634a47a87decf2
                     '''
                 }
             }
