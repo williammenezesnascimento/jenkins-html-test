@@ -40,7 +40,7 @@ pipeline {
                     -Dsonar.html.file.suffixes=.html \
                     -Dsonar.css.file.suffixes=.css \
                     -Dsonar.sourceEncoding=UTF-8 \
-                    -Dsonar.host.url=$SONAR_HOST_URL \
+                    -Dsonar.host.url=http://54.232.129.247:9000 \
                     -Dsonar.token=$SONAR_TOKEN
                 '''
             }
