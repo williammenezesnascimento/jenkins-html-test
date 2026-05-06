@@ -9,7 +9,10 @@ $title = "CI/CD DevOps - Jenkins + Docker + AWS";
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title><?php echo $title; ?></title>
+<title><?php 
+        echo $title;
+         
+       ?></title>
 
 <style>
 body { margin:0; font-family: Inter, Arial; background:#0b1220; color:#e5e7eb; }
