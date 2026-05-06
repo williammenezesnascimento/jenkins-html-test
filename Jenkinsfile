@@ -33,7 +33,7 @@ pipeline {
                     -Dsonar.exclusions=.git/**,node_modules/** \
                     -Dsonar.sourceEncoding=UTF-8 \
                     -Dsonar.host.url=http://54.232.129.247:9000 \
-                    -Dsonar.login=$SONAR_TOKEN
+                    -Dsonar.token=$SONAR_TOKEN
                     '''
                 }
             }
