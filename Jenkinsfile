@@ -25,14 +25,14 @@ pipeline {
                 withSonarQubeEnv('sonarqube') {
                     sh """
                     docker run --rm \
-                    --volumes-from \$(hostname) \
-                    -w \$WORKSPACE \
+                    -v $WORKSPACE:/usr/src \
+                    -w /usr/src \
                     sonarsource/sonar-scanner-cli:latest \
                     sonar-scanner -X \
                     -Dsonar.projectKey=jenkins-html-test \
                     -Dsonar.sources=. \
-                    -Dsonar.host.url=\$SONAR_HOST_URL \
-                    -Dsonar.token=\$SONAR_AUTH_TOKEN
+                    -Dsonar.host.url=$SONAR_HOST_URL \
+                    -Dsonar.token=$SONAR_AUTH_TOKEN
                     """
                 }
             }
