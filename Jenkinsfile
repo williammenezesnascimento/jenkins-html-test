@@ -23,17 +23,19 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('sonarqube') {
-                    sh """
+                    sh '''
                     docker run --rm \
-                      -v $WORKSPACE:/usr/src \
-                      -w /usr/src \
-                      sonarsource/sonar-scanner-cli:latest \
-                      -Dsonar.projectKey=jenkins-html-test \
-                      -Dsonar.sources=. \
-                      -Dsonar.host.url=$SONAR_HOST_URL \
-                      -Dsonar.token=$SONAR_AUTH_TOKEN \
-                      -Dsonar.verbose=true
-                    """
+                    -v $WORKSPACE:/usr/src \
+                    -w /usr/src \
+                    sonarsource/sonar-scanner-cli:latest \
+                    sonar-scanner -X \
+                    -Dsonar.projectKey=jenkins-html-test \
+                    -Dsonar.sources=. \
+                    -Dsonar.inclusions=**/*.php,**/*.html,**/*.js \
+                    -Dsonar.host.url=$SONAR_HOST_URL \
+                    -Dsonar.token=$SONAR_AUTH_TOKEN
+                    '''
+                    '''
                 }
             }
         }
