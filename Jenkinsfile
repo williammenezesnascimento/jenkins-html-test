@@ -32,11 +32,9 @@ pipeline {
                         -v $(pwd):/usr/src \
                         -w /usr/src \
                         sonarsource/sonar-scanner-cli \
-                        -Dsonar.projectKey=jenkins-site \
-                        -Dsonar.projectName=jenkins-site \
+                        -Dsonar.projectKey=jenkins-html-test \
+                        -Dsonar.projectName=jenkins-html-test \
                         -Dsonar.sources=. \
-                        -Dsonar.inclusions=**/* \
-                        -Dsonar.exclusions=**/node_modules/**,**/dist/** \
                         -Dsonar.host.url=$SONAR_HOST_URL \
                         -Dsonar.token=$SONAR_TOKEN
                     '''
@@ -61,7 +59,7 @@ pipeline {
 
                 echo "🚀 Starting new container..."
                 docker run -d \
-                  -p 8080:80 \
+                  -p 8081:80 \
                   --name $CONTAINER_NAME \
                   --restart unless-stopped \
                   $IMAGE_NAME
