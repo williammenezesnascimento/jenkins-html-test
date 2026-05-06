@@ -25,9 +25,8 @@ pipeline {
                 withSonarQubeEnv('sonarqube') {
                     sh """
                     docker run --rm \
-                    --user \$(id -u):\$(id -g) \
-                    -v \$WORKSPACE:/usr/src \
-                    -w /usr/src \
+                    --volumes-from \$(hostname) \
+                    -w \$WORKSPACE \
                     sonarsource/sonar-scanner-cli:latest \
                     sonar-scanner -X \
                     -Dsonar.projectKey=jenkins-html-test \
@@ -41,21 +40,23 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t jenkins-site .'
+                // Utilizando a variável ambiente IMAGE_NAME definida no topo
+                sh "docker build -t ${IMAGE_NAME} ."
             }
         }
 
         stage('Deploy') {
             steps {
+                // Utilizando as variáveis IMAGE_NAME e CONTAINER_NAME
                 sh """
-                docker stop site || true
-                docker rm site || true
+                docker stop ${CONTAINER_NAME} || true
+                docker rm ${CONTAINER_NAME} || true
 
                 docker run -d \
                 --restart unless-stopped \
                 -p 8081:80 \
-                --name site \
-                jenkins-site
+                --name ${CONTAINER_NAME} \
+                ${IMAGE_NAME}
                 """
             }
         }
