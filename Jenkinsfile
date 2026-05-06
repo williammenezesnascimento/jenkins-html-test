@@ -24,7 +24,7 @@ pipeline {
                 withSonarQubeEnv('sonarqube') {
                     sh '''
                     echo "📂 Estrutura do projeto:"
-                    ls -R .
+                    find . -type f
 
                     echo "🔎 Running SonarQube analysis..."
 
