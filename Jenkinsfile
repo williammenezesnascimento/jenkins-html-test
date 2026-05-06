@@ -37,6 +37,7 @@ pipeline {
                     -Dsonar.projectKey=to-do-list \
                     -Dsonar.projectBaseDir=/usr/src \
                     -Dsonar.sources=. \
+                    sonar.language=js \
                     -Dsonar.exclusions=.git/**,node_modules/** \
                     -Dsonar.sourceEncoding=UTF-8 \
                     -Dsonar.host.url=http://54.232.129.247:9000 \
