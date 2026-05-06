@@ -23,11 +23,11 @@ pipeline {
         steps {
             withSonarQubeEnv('sonarqube') {
                 sh '''
-                echo "📂 WORKSPACE ROOT:"
-                pwd
-
-                echo "📂 FILES:"
+                echo "📁 FILES SENT TO SONAR:"
                 find . -type f
+
+                echo "📂 Estrutura do projeto:"
+                ls -la
 
                 echo "🔎 Running SonarQube analysis..."
 
