@@ -4,7 +4,6 @@ pipeline {
     environment {
         IMAGE_NAME = "jenkins-site"
         CONTAINER_NAME = "site"
-        SONAR_TOKEN = credentials('sonar-token')
     }
 
     triggers {
@@ -15,45 +14,37 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                checkout scm
+                git credentialsId: 'github-ssh-key',
+                    url: 'git@github.com:williammenezesnascimento/jenkins-html-test.git'
+
+                sh 'echo "📦 Código baixado com sucesso"'
                 sh 'ls -la'
             }
         }
 
         stage('Debug') {
-        steps {
-            sh '''
-            echo "DEBUG WORKSPACE"
-            pwd
-            ls -la
-            '''
+            steps {
+                sh '''
+                echo "🔍 DEBUG WORKSPACE"
+                pwd
+                ls -la
+                '''
+            }
         }
-    
-        stage('SonarQube') {
+
+        stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('sonarqube') {
                     sh '''
-                    echo "📂 Workspace:"
-                    pwd
-                    ls -la
-                    find . -type f
+                    echo "📊 Iniciando análise SonarQube"
 
-                    docker run --rm \
-                    -v $WORKSPACE:/usr/src:rw \
-                    -w /usr/src \
-                    sonarsource/sonar-scanner-cli:5 \
                     sonar-scanner \
-                    -Dsonar.projectKey=to-do-list \
-                    -Dsonar.projectBaseDir=. \
-                    -Dsonar.inclusions=**/*.php,**/*.js,**/*.css \
+                    -Dsonar.projectKey=jenkins-html-test \
+                    -Dsonar.projectName=jenkins-html-test \
+                    -Dsonar.sources=. \
                     -Dsonar.exclusions=.git/**,node_modules/** \
                     -Dsonar.sourceEncoding=UTF-8 \
-                    -Dsonar.host.url=$SONAR_URL \
-                    -Dsonar.token=$SONAR_TOKEN \
-                    -Dsonar.scm.disabled=true \
-                    -Dsonar.sources=. \
-                    -Dsonar.tests=. \
-                    -Dsonar.test.inclusions=**/*test*
+                    -Dsonar.scm.disabled=true
                     '''
                 }
             }
@@ -62,7 +53,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 sh '''
-                echo "🔨 Building Docker image..."
+                echo "🔨 Build da imagem Docker"
                 docker build --no-cache -t $IMAGE_NAME .
                 '''
             }
@@ -71,10 +62,10 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
-                echo "🧹 Removing old container..."
+                echo "🧹 Removendo container antigo"
                 docker rm -f $CONTAINER_NAME || true
 
-                echo "🚀 Starting new container..."
+                echo "🚀 Subindo novo container"
                 docker run -d \
                   -p 8080:80 \
                   --name $CONTAINER_NAME \
@@ -87,9 +78,9 @@ pipeline {
         stage('Health Check') {
             steps {
                 sh '''
-                echo "🔍 Checking container..."
+                echo "🔍 Validando aplicação"
                 sleep 5
-                docker exec $CONTAINER_NAME wget -qO- http://localhost || exit 1
+                curl -f http://localhost:8080 || exit 1
                 '''
             }
         }
@@ -97,7 +88,7 @@ pipeline {
 
     post {
         success {
-            echo "✅ Deploy realizado com sucesso!"
+            echo "✅ Pipeline executado com sucesso!"
         }
 
         failure {
