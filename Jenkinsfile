@@ -26,18 +26,18 @@ pipeline {
                 echo "📁 FILES SENT TO SONAR:"
                 find . -type f
 
-                echo "📂 Estrutura do projeto:"
-                ls -la
-
                 echo "🔎 Running SonarQube analysis..."
 
                 docker run --rm \
-                    -v $WORKSPACE:/usr/src \
+                    -v $(pwd):/usr/src \
                     -w /usr/src \
                     sonarsource/sonar-scanner-cli \
                     -Dsonar.projectKey=jenkins-html-test \
+                    -Dsonar.projectName=jenkins-html-test \
                     -Dsonar.sources=. \
-                    -Dsonar.inclusions=**/*.js,**/*.html,**/*.css \
+                    -Dsonar.language=js \
+                    -Dsonar.sourceEncoding=UTF-8 \
+                    -Dsonar.exclusions=**/node_modules/**,**/dist/**,.git/** \
                     -Dsonar.host.url=$SONAR_HOST_URL \
                     -Dsonar.token=$SONAR_TOKEN
                 '''
