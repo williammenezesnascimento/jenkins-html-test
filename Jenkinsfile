@@ -41,7 +41,8 @@ pipeline {
                     -Dsonar.sourceEncoding=UTF-8 \
                     -Dsonar.host.url=http://54.232.129.247:9000 \
                     -Dsonar.token=$SONAR_TOKEN \
-                    -Dsonar.scm.disabled=true
+                    -Dsonar.scm.disabled=true \
+                    -Dsonar.inclusions=**
                     '''
                 }
             }
