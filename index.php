@@ -11,7 +11,7 @@ $title = "CI/CD DevOps - Jenkins + Docker + AWS";
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title><?php 
         echo $title;
-         
+        
        ?></title>
 
 <style>
