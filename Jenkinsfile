@@ -21,17 +21,20 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-               withSonarQubeEnv('sonarqube') {
-                    sh 'ls -la'
-                    sh 'find . -type f'
+                withSonarQubeEnv('sonarqube') {
 
                     sh '''
+                    ls -la
+                    find . -maxdepth 2
+                    pwd
+
                     docker run --rm \
                     -v $WORKSPACE:/usr/src \
                     -w /usr/src \
                     sonarsource/sonar-scanner-cli:5 \
                     sonar-scanner \
                     -Dsonar.projectKey=to-do-list \
+                    -Dsonar.projectBaseDir=/usr/src \
                     -Dsonar.sources=. \
                     -Dsonar.javascript.file.suffixes=.js \
                     -Dsonar.css.file.suffixes=.css \
@@ -39,8 +42,7 @@ pipeline {
                     -Dsonar.exclusions=.git/**,node_modules/** \
                     -Dsonar.sourceEncoding=UTF-8 \
                     -Dsonar.host.url=http://54.232.129.247:9000 \
-                    -Dsonar.login=$SONAR_TOKEN \
-                    -Dsonar.scanner.forceFullAnalysis=true
+                    -Dsonar.login=$SONAR_TOKEN
                     '''
                 }
             }
