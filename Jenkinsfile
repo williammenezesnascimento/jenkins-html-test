@@ -35,6 +35,7 @@ pipeline {
                     sonar-scanner \
                     -Dsonar.projectKey=to-do-list \
                     -Dsonar.projectBaseDir=/usr/src \
+                    -Dsonar.scm.disabled=true
                     -Dsonar.sources=. \
                     -Dsonar.inclusions=**/*.js,**/*.html,**/*.css \
                     -Dsonar.exclusions=.git/**,node_modules/** \
