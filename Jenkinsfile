@@ -25,8 +25,8 @@ pipeline {
                 withSonarQubeEnv('sonarqube') {
                     sh """
                     docker run --rm \
-                    -v \$(pwd):/usr/src \
-                    -w /usr/src \
+                    --volumes-from \$(hostname) \
+                    -w \$WORKSPACE \
                     sonarsource/sonar-scanner-cli:latest \
                     sonar-scanner -X \
                     -Dsonar.projectKey=jenkins-html-test \
