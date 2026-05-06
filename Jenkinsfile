@@ -23,16 +23,14 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('sonarqube') {
-                    // Mudamos para três aspas duplas para o Jenkins conseguir ler as variáveis $SONAR_...
                     sh """
                     docker run --rm \
-                    -v \$WORKSPACE:/usr/src \
+                    -v \$(pwd):/usr/src \
                     -w /usr/src \
                     sonarsource/sonar-scanner-cli:latest \
                     sonar-scanner -X \
                     -Dsonar.projectKey=jenkins-html-test \
                     -Dsonar.sources=. \
-                    -Dsonar.inclusions=**/*.php,**/*.html,**/*.js \
                     -Dsonar.host.url=\$SONAR_HOST_URL \
                     -Dsonar.token=\$SONAR_AUTH_TOKEN
                     """
