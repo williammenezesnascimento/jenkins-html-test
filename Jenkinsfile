@@ -19,28 +19,32 @@ pipeline {
             }
         }
 
-        stage('SonarQube Analysis') {
-            steps {
-                withSonarQubeEnv('sonarqube') {
-                    sh '''
-                    echo "📂 Estrutura do projeto:"
-                    find . -type f
+    stage('SonarQube Analysis') {
+        steps {
+            withSonarQubeEnv('sonarqube') {
+                sh '''
+                echo "📂 WORKSPACE ROOT:"
+                pwd
 
-                    echo "🔎 Running SonarQube analysis..."
+                echo "📂 FILES:"
+                find . -type f
 
-                    docker run --rm \
-                        -v $(pwd):/usr/src \
-                        -w /usr/src \
-                        sonarsource/sonar-scanner-cli \
-                        -Dsonar.projectKey=jenkins-html-test \
-                        -Dsonar.projectName=jenkins-html-test \
-                        -Dsonar.sources=. \
-                        -Dsonar.host.url=$SONAR_HOST_URL \
-                        -Dsonar.token=$SONAR_TOKEN
-                    '''
-                }
+                echo "🔎 Running SonarQube analysis..."
+
+                docker run --rm \
+                    -v $WORKSPACE:/usr/src \
+                    -w /usr/src \
+                    sonarsource/sonar-scanner-cli \
+                    -Dsonar.projectKey=jenkins-html-test \
+                    -Dsonar.sources=. \
+                    -Dsonar.inclusions=**/*.html \
+                    -Dsonar.exclusions=**/node_modules/** \
+                    -Dsonar.host.url=$SONAR_HOST_URL \
+                    -Dsonar.token=$SONAR_TOKEN
+                '''
             }
         }
+    }
 
         stage('Build Docker Image') {
             steps {
