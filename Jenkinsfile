@@ -36,6 +36,7 @@ pipeline {
                     -Dsonar.projectKey=to-do-list \
                     -Dsonar.projectBaseDir=/usr/src \
                     -Dsonar.sources=. \
+                    -Dsonar.inclusions=**/*.js,**/*.html,**/*.css \
                     -Dsonar.javascript.file.suffixes=.js \
                     -Dsonar.css.file.suffixes=.css \
                     -Dsonar.html.file.suffixes=.html \
