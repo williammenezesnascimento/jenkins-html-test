@@ -41,13 +41,7 @@ pipeline {
         stage('Quality Gate') {
             steps {
                 timeout(time: 5, unit: 'MINUTES') {
-                    script {
-                        echo "⏳ Waiting for Sonar Quality Gate..."
-                        def qg = waitForQualityGate()
-                        if (qg.status != 'OK') {
-                            error "❌ Quality Gate falhou: ${qg.status}"
-                        }
-                    }
+                    waitForQualityGate abortPipeline: true
                 }
             }
         }
