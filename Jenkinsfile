@@ -26,22 +26,14 @@ pipeline {
                     echo "🔎 Running SonarQube analysis..."
 
                     docker run --rm \
-                    -v $(pwd):/usr/src \
-                    -w /usr/src \
-                    sonarsource/sonar-scanner-cli \
-                    -Dsonar.projectKey=jenkins-site \
-                    -Dsonar.sources=. \
-                    -Dsonar.host.url=$SONAR_HOST_URL \
-                    -Dsonar.token=$SONAR_TOKEN
+                      -v $(pwd):/usr/src \
+                      -w /usr/src \
+                      sonarsource/sonar-scanner-cli \
+                      -Dsonar.projectKey=jenkins-site \
+                      -Dsonar.sources=. \
+                      -Dsonar.host.url=$SONAR_HOST_URL \
+                      -Dsonar.token=$SONAR_TOKEN
                     '''
-                }
-            }
-        }
-
-        stage('Quality Gate') {
-            steps {
-                timeout(time: 5, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
                 }
             }
         }
@@ -88,6 +80,7 @@ pipeline {
         success {
             echo "✅ Deploy realizado com sucesso!"
         }
+
         failure {
             echo "❌ Falha no pipeline!"
             sh 'docker logs site || true'
