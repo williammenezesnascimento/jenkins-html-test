@@ -22,6 +22,9 @@ pipeline {
     stage('SonarQube Analysis') {
         steps {
             withSonarQubeEnv('sonarqube') {
+                sh 'pwd'
+                sh 'ls -la'
+                sh 'sonar-scanner'
                 sh '''
                 echo "📁 Arquivos do projeto:"
                 find . -type f
