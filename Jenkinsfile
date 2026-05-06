@@ -30,7 +30,7 @@ pipeline {
                     sonarsource/sonar-scanner-cli:latest \
                     sonar-scanner \
                     -Dsonar.projectKey=jenkins-html-test \
-                    -Dsonar.sources=. \
+                    -Dsonar.sources=/usr/src \
                     -Dsonar.host.url=$SONAR_HOST_URL \
                     -Dsonar.token=$SONAR_AUTH_TOKEN
                     '''
