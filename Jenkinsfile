@@ -33,7 +33,6 @@ pipeline {
                     -w /usr/src \
                     sonarsource/sonar-scanner-cli \
                     -Dsonar.projectKey=jenkins-html-test \
-                    -Dsonar.projectName=jenkins-html-test \
                     -Dsonar.sources=. \
                     -Dsonar.exclusions=.git/**,node_modules/** \
                     -Dsonar.javascript.file.suffixes=.js \
