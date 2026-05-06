@@ -23,9 +23,10 @@ pipeline {
             steps {
                 withSonarQubeEnv('sonarqube') {
                     sh '''
-                    echo "🔎 Running SonarQube analysis..."
-
+                    echo "📂 Estrutura do projeto:"
                     ls -R .
+
+                    echo "🔎 Running SonarQube analysis..."
 
                     docker run --rm \
                         -v $(pwd):/usr/src \
@@ -34,7 +35,8 @@ pipeline {
                         -Dsonar.projectKey=jenkins-site \
                         -Dsonar.projectName=jenkins-site \
                         -Dsonar.sources=. \
-                        -Dsonar.inclusions=**/*.html,**/*.js,**/*.css \
+                        -Dsonar.inclusions=**/* \
+                        -Dsonar.exclusions=**/node_modules/**,**/dist/** \
                         -Dsonar.host.url=$SONAR_HOST_URL \
                         -Dsonar.token=$SONAR_TOKEN
                     '''
