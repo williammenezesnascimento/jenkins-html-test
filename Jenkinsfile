@@ -25,14 +25,12 @@ pipeline {
                     sh '''
                     echo "🔎 Running SonarQube analysis..."
 
-                    docker run --rm \
-                    -e SONAR_HOST_URL=$SONAR_HOST_URL \
-                    -e SONAR_TOKEN=$SONAR_TOKEN \
-                    -v $(pwd):/usr/src \
-                    sonarsource/sonar-scanner-cli \
-                    -Dsonar.projectKey=jenkins-site \
-                    -Dsonar.sources=/usr/src \
-                    -Dsonar.login=$SONAR_TOKEN
+                    sonar-scanner \
+                      -Dsonar.projectKey=jenkins-site \
+                      -Dsonar.projectName=jenkins-site \
+                      -Dsonar.sources=. \
+                      -Dsonar.host.url=$SONAR_HOST_URL \
+                      -Dsonar.token=$SONAR_TOKEN
                     '''
                 }
             }
@@ -41,8 +39,13 @@ pipeline {
         stage('Quality Gate') {
             steps {
                 timeout(time: 5, unit: 'MINUTES') {
-                    echo "⏳ Waiting for Sonar Quality Gate..."
-                    waitForQualityGate abortPipeline: true
+                    script {
+                        echo "⏳ Waiting for Sonar Quality Gate..."
+                        def qg = waitForQualityGate()
+                        if (qg.status != 'OK') {
+                            error "❌ Quality Gate falhou: ${qg.status}"
+                        }
+                    }
                 }
             }
         }
