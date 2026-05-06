@@ -1,6 +1,7 @@
 <?php
 // Você pode usar PHP aqui depois (logs, variáveis, etc)
 $title = "CI/CD DevOps - Jenkins + Docker + AWS";
+
 ?>
 
 <!DOCTYPE html>
